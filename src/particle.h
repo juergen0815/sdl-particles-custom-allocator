@@ -44,8 +44,6 @@ protected:
     virtual bool Initialize( Renderer* renderer );
 
     virtual void Render( float ticks );
-
-    virtual void PostRender();
 private:
     void Reset();
 

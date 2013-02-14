@@ -22,9 +22,17 @@ public:
     enum Color {
         R, G, B, A
     };
+    // re-use vector as pure storage for s,t coords - will not work with cross/dot product!
+    enum TexCoord {
+        U, V, S, T
+    };
 private:
+    // this will hardly pad, but we must ensure we can tightly pack a float[4] into a linear array!
+#pragma pack( push, 1 )
     float vec[4];
-
+#pragma pack( pop )
+    // rest of class is inlined which degrades the whole vector into 4 floats and a "namespace" - never create a vtable for this class!!!
+    // A vertex will only need 3 components, but all load store are 4 anyway...at the cost of an additional float...
 public:
     Vector() : vec({0,0,0,1})
     {
@@ -46,8 +54,6 @@ public:
         vec[1] = y;
         vec[2] = z;
         vec[3] = 1;
-        // That's kind a cool...but rather slow...so test only
-//        std::memcpy(vec,(float[4]){ x,y,z,1 }, 4*sizeof(float));
     }
 
     Vector( float r, float g, float b, float a )
@@ -60,13 +66,21 @@ public:
 
     operator float* () { return vec; }
 
-    operator const float* () { return vec; }
+    operator const float* () const { return vec; }
 
     float operator[]( Vector::Coord coord ) const {
         return vec[ (int)coord ];
     }
 
     float operator[]( Vector::Color color ) const {
+        return vec[ (int)color ];
+    }
+
+    float& operator[]( Vector::Coord coord ) {
+        return vec[ (int)coord ];
+    }
+
+    float& operator[]( Vector::Color color ) {
         return vec[ (int)color ];
     }
 

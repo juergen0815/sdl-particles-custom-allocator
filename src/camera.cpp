@@ -29,7 +29,7 @@ Camera::~Camera()
 {
 }
 
-bool Camera::DoInitialize( Renderer* renderer )
+bool Camera::Initialize( Renderer* renderer )
 {
     return true;
 }
@@ -79,13 +79,13 @@ bool Camera::HandleEvent(const SDL_Event& event)
                 processed = true;
             }
             if ( m_MouseRightDown ) {
-                m_CameraPosition[ Vector::Z ] -= (event.motion.y - m_MouseY) * 0.2f;
+                m_CameraPosition[ Vector::Z ] -= (event.motion.y - m_MouseY) * 0.05f;
                 m_MouseY = event.motion.y;
                 processed = true;
             }
             if ( m_MouseMiddleDown ) {
-                m_CameraPosition[ Vector::X ] -= (event.motion.x - m_MouseX) * 0.2f;
-                m_CameraPosition[ Vector::Y ] -= (event.motion.y - m_MouseY) * 0.2f;
+                m_CameraPosition[ Vector::X ] -= (event.motion.x - m_MouseX) * 0.05f;
+                m_CameraPosition[ Vector::Y ] -= (event.motion.y - m_MouseY) * 0.05f;
                 m_MouseX = event.motion.x;
                 m_MouseY = event.motion.y;
                 processed = true;
@@ -135,13 +135,13 @@ bool Camera::HandleEvent(const SDL_Event& event)
     return processed;
 }
 
-void Camera::DoUpdate( float ticks )
+void Camera::Render( float ticks )
 {
     m_CameraPosition += m_JoyStickMotionAxis;
     m_CameraAngle    += m_JoystickOrientationAxis;
-    Matrix &m = GetRenderState()->GetMatrix();
-    // reset matrix to object world
-    m.LoadIdentity();
-    m.Rotate( m_CameraAngle );
-    m.Translate( (const float[4]){m_CameraPosition[Vector::X], -m_CameraPosition[Vector::Y], -m_CameraPosition[Vector::Z], 1.0f});
+
+    glLoadIdentity();
+    glRotatef( m_CameraAngle[ Vector::X ], 1.0f, 0.0f, 0.0f );
+    glRotatef( m_CameraAngle[ Vector::Y ], 0.0f, 1.0f, 0.0f );
+    glTranslatef( m_CameraPosition[Vector::X], -m_CameraPosition[Vector::Y], -m_CameraPosition[Vector::Z] );
 }

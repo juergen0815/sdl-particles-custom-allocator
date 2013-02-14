@@ -66,8 +66,6 @@ protected:
 
 	virtual void Render( float ticks ) = 0;
 
-	virtual void PostRender( ) = 0;
-
 	friend class Renderer;
 };
 

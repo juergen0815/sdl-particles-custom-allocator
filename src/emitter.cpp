@@ -67,49 +67,18 @@ Emitter::Emitter(Renderer* renderer) throw()
     ASSERT( renderer, "Error! Renderer is invalid!" );
 
     renderer->RegisterUpdateFunction( boost::bind( &Emitter::OnUpdate, this, _1 ) );
-
     m_Particles.resize( NUM_PARTICLES );
-    {
-//        Allocator<Particle> allocator( m_MemoryPool );
-//        std::vector< Particle, Allocator<Particle> > pl( allocator );
-//        pl.resize( NUM_PARTICLES );
-
-//        m_Particles = &pl[0];
-
-//        m_Particles = EntityPool::Construct<Particle>(m_MemoryPool, NUM_PARTICLES );
-//        pl.assign( &m_Particles[0], &m_Particles[NUM_PARTICLES-1] );
-//        pl.push_back( Particle(sColors[4*NUM_COLORS/NUM_PARTICLES]) );
-    }
-//    MemoryPool* pool = particlePool.get();
-//    try {
-//        Particle* _particle = EntityPool::Construct<Particle>(particlePool.get(), NUM_PARTICLES );
-//        boost::shared_ptr< Particle > _p( _particle, EntityPoolDeleter<Particle>(pool, NUM_PARTICLES ) );
-//        _particle->~Particle();
-//        EntityPool::Free( *particlePool, _particle );
-//    }
-//    catch ( ... ) {
-//        throw ;
-//    }
 
     int i(0);
     for ( auto& particle : m_Particles ) {
         particle.SetFlag(Entity::F_ENABLE);
         particle.SetColor(sColors[i*NUM_COLORS/NUM_PARTICLES]); ++i;
     }
-//    m_Particles = EntityPool::Construct<Particle>(m_MemoryPool, NUM_PARTICLES );
-//    for ( std::size_t i = 0; i < NUM_PARTICLES; ++i ) {
-//        Particle* particle = &m_Particles[i];// ( &_particle[i], EntityPoolDeleter<Particle>(pool) ); // new Particle( sColors[i*NUM_COLORS/NUM_PARTICLES] ) );
-//        particle->SetFlag(Entity::F_ENABLE);
-//        particle->SetColor(sColors[i*NUM_COLORS/NUM_PARTICLES]);
-//        m_Particles.push_back( particle );
-//    }
 }
 
 Emitter::~Emitter()
 {
-//    EntityPool::Delete<Particle>( m_MemoryPool, m_Particles, NUM_PARTICLES );
     m_Particles.clear();
-//    EntityPool::DestroyPool( m_MemoryPool );
 }
 
 bool Emitter::HandleEvent( const SDL_Event& event )
@@ -141,11 +110,8 @@ bool Emitter::Initialize( Renderer* renderer )
 {
     m_Texture->Allocate( sParticleTexture.m_Width, sParticleTexture.m_Height, GL_RGBA );
     m_Texture->Load( sParticleTexture.m_Pixels, sParticleTexture.m_Width, sParticleTexture.m_Height, GL_RGBA );
-
-//    for ( auto particle : m_Particles ) {
-    for ( std::size_t i = 0; i < NUM_PARTICLES; ++i ) {
-        Particle* particle = &m_Particles[i];
-        particle->Initialize( renderer );
+    for ( auto& particle : m_Particles ) {
+        particle.Initialize( renderer );
     }
     return true;
 }
@@ -167,10 +133,6 @@ void Emitter::Render( float ticks )
     ASSERT( m_Texture, "Missing texture! Bailing out!" );
     m_Texture->Enable();
 
-//    for ( std::size_t i = 0; i < NUM_PARTICLES; ++i ) {
-//        Particle* particle = &m_Particles[i];
-//        particle->Render( ticks );
-//    }
     for ( auto& particle : m_Particles ) {
         particle.Render( ticks );
     }
@@ -184,7 +146,3 @@ void Emitter::Render( float ticks )
     glPushMatrix();
 }
 
-void Emitter::PostRender( )
-{
-
-}

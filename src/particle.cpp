@@ -59,10 +59,6 @@ void Particle::Render( float ticks )
     }
 }
 
-void Particle::PostRender()
-{
-}
-
 void Particle::Reset()
 {
     SetFlag( Entity::F_ENABLE );

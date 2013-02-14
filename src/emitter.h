@@ -42,8 +42,6 @@ private:
     virtual bool Initialize( Renderer* renderer );
 
     virtual void Render( float ticks );
-
-    virtual void PostRender( );
 };
 
 #endif // __emitter_h__

@@ -230,7 +230,6 @@ void Renderer::Run()
 
             // run list
             for( auto it = m_RenderList.begin(); it != m_RenderList.end(); ) {
-//            for( auto& entity : m_RenderList ) {
                 EntityPtr entity = *it;
                 if ( entity->AreFlagsSet( Entity::F_ENABLE ) ) {
                     entity->Render( (timeStamp - ticks)*m_TimeBase*float(m_Pause) );

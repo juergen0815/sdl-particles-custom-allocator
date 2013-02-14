@@ -23,6 +23,7 @@
 
 App::App()
     : m_Worker(new Renderer)
+    , m_Joystick(nullptr)
 {
 }
 
@@ -69,6 +70,12 @@ void App::Init(int argc, char* argv[])
     //  SDL_WM_SetIcon( pei::SDL::SurfaceRef( pei::LogoBrush ), NULL );
     //	SDL_ShowCursor(SDL_DISABLE);
     //	SDL_EnableUNICODE(1);
+
+    int numJoysticks = SDL_NumJoysticks();
+    if ( numJoysticks > 0 ) {
+        m_Joystick = SDL_JoystickOpen(0);
+        SDL_JoystickEventState(SDL_ENABLE);
+    }
 }
 
 void App::InitScene( Renderer* renderer, int width, int height )
@@ -85,7 +92,7 @@ void App::InitScene( Renderer* renderer, int width, int height )
     m_EventHandlerList.push_back(viewport);
 
     // Add the camera
-    EntityPtr camera(new Camera);
+    EntityPtr camera(new Camera(m_Joystick));
     // this entity handles events
     m_EventHandlerList.push_back(camera);
     // this entity renders
