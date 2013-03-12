@@ -8,7 +8,7 @@
 #include "entity.h"
 #include "entitypool.h"
 
-void Entity::Destroy()
+void Entity::CheckDestroy()
 {
     delete this;
 }
